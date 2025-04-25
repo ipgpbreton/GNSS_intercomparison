@@ -147,7 +147,7 @@ def plot_diff_time_series(
             "min": df_station[variable_column].min(),
             "max": df_station[variable_column].max(),
             "median": df_station[variable_column].median(),
-            "IQR/1.35": (df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25))/ 1.35,
+            "IQR/1.35": (df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25))/1.35,
             "Number of point out of median +/- 3*sigma": df_station[(
                     df_station[variable_column] > df_station[variable_column].median()+ 3* (df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25))/ 1.35
                 ) | (
@@ -408,10 +408,7 @@ def plot_scatter_joint_stats(
             "std": station_stats[y_col].std(),
             "median": station_stats[y_col].median(),
             "IQR/1.35": (
-                station_stats[y_col].quantile(0.75)
-                - station_stats[y_col].quantile(0.25)
-            )
-            / 1.35,
+                station_stats[y_col].quantile(0.75) - station_stats[y_col].quantile(0.25))/1.35,
         }
 
         mean_stats = {
@@ -419,10 +416,7 @@ def plot_scatter_joint_stats(
             "std": station_stats[x_col].std(),
             "median": station_stats[x_col].median(),
             "IQR/1.35": (
-                station_stats[x_col].quantile(0.75)
-                - station_stats[x_col].quantile(0.25)
-            )
-            / 1.35,
+                station_stats[x_col].quantile(0.75) - station_stats[x_col].quantile(0.25))/1.35,
         }
 
         stats_text = (
