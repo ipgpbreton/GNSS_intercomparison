@@ -94,6 +94,8 @@ def plot_diff_time_series(
     ylim=[-30, 30],
     xlim=(pd.to_datetime("2000-01-01"), pd.to_datetime("2019-12-31")),
     save=False,
+    save_path=None,
+    dpi=600
 ):
     """
     Plot time series data of differences of ZTD or PWC between various datasets.
@@ -147,11 +149,11 @@ def plot_diff_time_series(
             "min": df_station[variable_column].min(),
             "max": df_station[variable_column].max(),
             "median": df_station[variable_column].median(),
-            "IQR/1.35": (df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25))/1.35,
+            "IQR/1.35": (df_station[variable_column].quantile(0.75)-df_station[variable_column].quantile(0.25))/1.35,
             "Number of point out of median +/- 3*sigma": df_station[(
-                    df_station[variable_column] > df_station[variable_column].median()+ 3* (df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25))/ 1.35
+                    df_station[variable_column] > df_station[variable_column].median()+ 3* (df_station[variable_column].quantile(0.75)-df_station[variable_column].quantile(0.25))/ 1.35
                 ) | (
-                    df_station[variable_column] < df_station[variable_column].median()- 3* (df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25))/ 1.35
+                    df_station[variable_column] < df_station[variable_column].median()- 3* (df_station[variable_column].quantile(0.75)-df_station[variable_column].quantile(0.25))/ 1.35
                 )].shape[0],
             "Total number of points": len(df_station[variable_column]),
         }
@@ -168,9 +170,9 @@ def plot_diff_time_series(
         )
 
         median = df_station[variable_column].median()
-        iqr = df_station[variable_column].quantile(0.75) - df_station[variable_column].quantile(0.25)
+        iqr = df_station[variable_column].quantile(0.75)-df_station[variable_column].quantile(0.25)
         sigma = iqr / 1.35
-        lower_bound = median - 3 * sigma
+        lower_bound = median-3 * sigma
         upper_bound = median + 3 * sigma
 
         ax.axhline(
@@ -211,7 +213,6 @@ def plot_diff_time_series(
                 color = "gray"
                 label_text = "Unknown Equipment Change"
 
-            # Only add label for the first occurrence of each type
             label = (
                 label_text
                 if date == equipment_change[
@@ -258,7 +259,7 @@ def plot_diff_time_series(
 
     plt.tight_layout()
     if save == True:
-        plt.savefig(f"/home/hbreton/Documents/Script/Plots/era5_comparison/{label}/{station}_{variable}.png", dpi=600, bbox_inches='tight')
+        plt.savefig(f"{save_path}/full_time_series_data/time_serie_{station}_{variable}.png", dpi=600, bbox_inches='tight')
     plt.show()
 
 def plot_scatter_joint_stats(
@@ -268,7 +269,7 @@ def plot_scatter_joint_stats(
     datatype="PWC",
     x_col="mean",
     y_col="std",
-    title="IGSrepro3 - ERA5",
+    title="IGSrepro3-ERA5",
     xlabel="Mean[ΔPWC] [kg/m²]",
     ylabel="STD[ΔPWC] [kg/m²]",
     xlim=(pd.to_datetime("2000-01-01"), pd.to_datetime("2019-12-31")),
@@ -297,7 +298,7 @@ def plot_scatter_joint_stats(
         Column name to use for x-axis
     y_col : str, default='std'
         Column name to use for y-axis
-    title : str, default='IGSrepro3 - ERA5'
+    title : str, default='IGSrepro3-ERA5'
         Plot title
     xlabel : str, default='Mean[ΔPWC] [kg/m²]'
         Label for x-axis
@@ -408,7 +409,7 @@ def plot_scatter_joint_stats(
             "std": station_stats[y_col].std(),
             "median": station_stats[y_col].median(),
             "IQR/1.35": (
-                station_stats[y_col].quantile(0.75) - station_stats[y_col].quantile(0.25))/1.35,
+                station_stats[y_col].quantile(0.75)-station_stats[y_col].quantile(0.25))/1.35,
         }
 
         mean_stats = {
@@ -416,7 +417,7 @@ def plot_scatter_joint_stats(
             "std": station_stats[x_col].std(),
             "median": station_stats[x_col].median(),
             "IQR/1.35": (
-                station_stats[x_col].quantile(0.75) - station_stats[x_col].quantile(0.25))/1.35,
+                station_stats[x_col].quantile(0.75)-station_stats[x_col].quantile(0.25))/1.35,
         }
 
         stats_text = (
@@ -457,18 +458,18 @@ def plot_scatter_joint_stats(
     if annotate_worst == True:
         if datatype == "PWC":
             label_mapping = {
-                "IGSrepro3 - ERA5": "ΔPWC[IGSrepro3 - ERA5]",
-                "IGSdaily - ERA5": "ΔPWC[IGSdaily - ERA5]",
-                "EPNrepro2 - ERA5": "ΔPWC[EPNrepro2 - ERA5]",
-                "IGSdaily - IGSrepro3": "ΔPWC[IGSdaily - IGSrepro3]",
-                "IGSdaily - EPNrepro2": "ΔPWC[IGSdaily - EPNrepro2]",
-                "IGSrepro3 - EPNrepro2": "ΔPWC[IGSrepro3 - EPNrepro2]",
+                "IGSrepro3-ERA5": "ΔPWC[IGSrepro3-ERA5]",
+                "IGSdaily-ERA5": "ΔPWC[IGSdaily-ERA5]",
+                "EPNrepro2-ERA5": "ΔPWC[EPNrepro2-ERA5]",
+                "IGSdaily-IGSrepro3": "ΔPWC[IGSdaily-IGSrepro3]",
+                "IGSdaily-EPNrepro2": "ΔPWC[IGSdaily-EPNrepro2]",
+                "IGSrepro3-EPNrepro2": "ΔPWC[IGSrepro3-EPNrepro2]",
             }
         else:
             label_mapping = {
-                "IGSdaily - IGSrepro3": "ΔZTD[IGSdaily - IGSrepro3]",
-                "IGSdaily - EPNrepro2": "ΔZTD[IGSdaily - EPNrepro2]",
-                "IGSrepro3 - EPNrepro2": "ΔZTD[IGSrepro3 - EPNrepro2]",
+                "IGSdaily-IGSrepro3": "ΔZTD[IGSdaily-IGSrepro3]",
+                "IGSdaily-EPNrepro2": "ΔZTD[IGSdaily-EPNrepro2]",
+                "IGSrepro3-EPNrepro2": "ΔZTD[IGSrepro3-EPNrepro2]",
             }
 
         time_series_label = label_mapping.get(title)
@@ -484,7 +485,9 @@ def plot_scatter_joint_stats(
                         labels=[time_series_label],
                         ylim=ylim,
                         xlim=xlim,
-                        save=False,
+                        save=save,
+                        save_path=save_path,
+                        dpi=dpi
                     )
                 except Exception as e:
                     print(f"Error plotting {row['Station']}: {e}")
@@ -501,7 +504,9 @@ def plot_scatter_joint_stats(
                             labels=[time_series_label],
                             ylim=ylim,
                             xlim=xlim,
-                            save=False,
+                            save=save,
+                            save_path=save_path,
+                            dpi=dpi
                         )
                     except Exception as e:
                         print(f"Error plotting {row['Station']}: {e}")
@@ -511,18 +516,18 @@ def plot_scatter_joint_stats(
     if annotate_threshold_worst == True:
         if datatype == "PWC":
             label_mapping = {
-                "IGSrepro3 - ERA5": "ΔPWC[IGSrepro3 - ERA5]",
-                "IGSdaily - ERA5": "ΔPWC[IGSdaily - ERA5]",
-                "EPNrepro2 - ERA5": "ΔPWC[EPNrepro2 - ERA5]",
-                "IGSdaily - IGSrepro3": "ΔPWC[IGSdaily - IGSrepro3]",
-                "IGSdaily - EPNrepro2": "ΔPWC[IGSdaily - EPNrepro2]",
-                "IGSrepro3 - EPNrepro2": "ΔPWC[IGSrepro3 - EPNrepro2]",
+                "IGSrepro3-ERA5": "ΔPWC[IGSrepro3-ERA5]",
+                "IGSdaily-ERA5": "ΔPWC[IGSdaily-ERA5]",
+                "EPNrepro2-ERA5": "ΔPWC[EPNrepro2-ERA5]",
+                "IGSdaily-IGSrepro3": "ΔPWC[IGSdaily-IGSrepro3]",
+                "IGSdaily-EPNrepro2": "ΔPWC[IGSdaily-EPNrepro2]",
+                "IGSrepro3-EPNrepro2": "ΔPWC[IGSrepro3-EPNrepro2]",
             }
         else:
             label_mapping = {
-                "IGSdaily - IGSrepro3": "ΔZTD[IGSdaily - IGSrepro3]",
-                "IGSdaily - EPNrepro2": "ΔZTD[IGSdaily - EPNrepro2]",
-                "IGSrepro3 - EPNrepro2": "ΔZTD[IGSrepro3 - EPNrepro2]",
+                "IGSdaily-IGSrepro3": "ΔZTD[IGSdaily-IGSrepro3]",
+                "IGSdaily-EPNrepro2": "ΔZTD[IGSdaily-EPNrepro2]",
+                "IGSrepro3-EPNrepro2": "ΔZTD[IGSrepro3-EPNrepro2]",
             }
         time_series_label = label_mapping.get(title)
 
@@ -537,7 +542,9 @@ def plot_scatter_joint_stats(
                         labels=[time_series_label],
                         ylim=ylim,
                         xlim=xlim,
-                        save=False,
+                        save=save,
+                        save_path=save_path,
+                        dpi=dpi
                     )
                 except Exception as e:
                     print(f"Error plotting {row['Station']}: {e}")
@@ -557,7 +564,9 @@ def plot_scatter_joint_stats(
                             labels=[time_series_label],
                             ylim=ylim,
                             xlim=xlim,
-                            save=False,
+                            save=save,
+                            save_path=save_path,
+                            dpi=dpi
                         )
                     except Exception as e:
                         print(f"Error plotting {row['Station']}: {e}")
@@ -566,7 +575,5 @@ def plot_scatter_joint_stats(
 
     if save == True:
         if save_path:
-            plt.savefig(save_path, dpi=dpi, bbox_inches="tight")
-            print(f"Saved plot to {save_path}")
-
+            plt.savefig(f'{save_path}/full_time_series_data/scatter_plot_{datatype}_{title}.png', dpi=600, bbox_inches="tight")
     return g
